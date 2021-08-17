@@ -323,12 +323,19 @@ const int BtnOrdre4 = 1;  // Numero Matrice bouton (jaune1)
 const int BtnOrdre5 = 2;  // Numero Matrice bouton (jaune2)
 const int BtnOrdre6 = 3;  // Numero Matrice bouton (jaune3)
 #else
-const int BtnOrdre1 = 15;  // Numero Matrice bouton (vert1)
-const int BtnOrdre2 = 10;  // Numero Matrice bouton (vert2)
-const int BtnOrdre3 = 11;  // Numero Matrice bouton (vert3)
-const int BtnOrdre4 = 12;  // Numero Matrice bouton (jaune1)
-const int BtnOrdre5 = 13;  // Numero Matrice bouton (jaune2)
-const int BtnOrdre6 = 14;  // Numero Matrice bouton (jaune3)
+//const int BtnOrdre1 = 15;  // Numero Matrice bouton (vert1)
+//const int BtnOrdre2 = 10;  // Numero Matrice bouton (vert2)
+//const int BtnOrdre3 = 11;  // Numero Matrice bouton (vert3)
+//const int BtnOrdre4 = 12;  // Numero Matrice bouton (jaune1)
+//const int BtnOrdre5 = 13;  // Numero Matrice bouton (jaune2)
+//const int BtnOrdre6 = 14;  // Numero Matrice bouton (jaune3)
+
+const int BtnOrdre1 = 14;  // Numero Matrice bouton (vert1)
+const int BtnOrdre2 = 13;  // Numero Matrice bouton (vert2)
+const int BtnOrdre3 = 12;  // Numero Matrice bouton (vert3)
+const int BtnOrdre4 = 11;  // Numero Matrice bouton (jaune1)
+const int BtnOrdre5 = 10;  // Numero Matrice bouton (jaune2)
+const int BtnOrdre6 = 15;  // Numero Matrice bouton (jaune3)
 #endif
 /***************************************/
 /**************************************/
@@ -374,8 +381,10 @@ int NB_LED_SLIDER = 10;
 int MatrLedSlider[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 #else
 int NB_LED_SLIDER = 40;
-int MatrLedSlider[] = {69, 68, 67, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46,
-                       45, 44, 43, 42, 41, 40, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70};
+//int MatrLedSlider[] = {69, 68, 67, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46,
+//                       45, 44, 43, 42, 41, 40, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70};
+int MatrLedSlider[] = {50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73,
+                       74, 75, 76, 77, 78, 79, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49};
 #endif
 /***************************************/
 /**************************************/
@@ -1434,7 +1443,7 @@ void setup_wifi() {
 //******************************************************************
 void reconnect() {
     char bufSubscribe[50];
-    char bufMqttClient[50];
+//    char bufMqttClient[50];
     char bufMAC[50];
     char bufWillTopic[50];
     char bufWillMessage[500];
@@ -1448,7 +1457,7 @@ void reconnect() {
         // Attempt to connect
 //        AdresseMac.toCharArray(bufMqttClient, AdresseMac.length() + 1);
         AdresseMac.toCharArray(bufMAC, AdresseMac.length() + 1);
-        WillTopic = AdresseMac+"/status";
+        WillTopic = AdresseMac + "/status";
         WillTopic.toCharArray(bufWillTopic, WillTopic.length() + 1);
 
         doc.clear();
@@ -4204,11 +4213,20 @@ void AffichageStatus(String pTopic, String pMes) {
     String MesSend = "";
 
     doc.clear();
-    doc["idBoite"] = String(LectureEeprom(EEP_ID_BOITE));
+//    doc["idBoite"] = String(LectureEeprom(EEP_ID_BOITE));
+    doc["MAC"] = AdresseMac;
+    doc["idBox"] = String(LectureEeprom(EEP_ID_BOITE));;
     doc["player"] = String(LectureEeprom(EEP_PLAYER));
+
+    doc["status"] = MQTT_CO;
     doc["brightness"] = String(LectureEeprom(EEP_BRIGHTNESS));
     doc["ecranLcd"] = String(LectureEeprom(EEP_ECRAN_LCD));
 
+    if (doc["ecranLcd"] == 1) {
+        doc["activity"] = "diffuse_cube";
+    } else {
+        doc["activity"] = "diffuse_screen";
+    }
     // information version revision
     doc["version"] = String(VERSION);
     doc["revision"] = String(REVISION);
